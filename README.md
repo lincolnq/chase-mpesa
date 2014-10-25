@@ -20,22 +20,44 @@ Submitting a Transaction
 POST to `/api/eft`.
 
 Headers must include
-* Authorization
+* Authorization header (HTTP basic auth with your username/password)
 * Content-type: application/json
 
 The body of the POST is a JSON stream with the following structure:
 
-    {"Type": 0 or 1,            # 0 is bank-to-bank, 1 is bank-to-mobile
-    "CompanyId": GUID           # ID of company, assigned by Chase Bank
-    "Remarks": "My Testing",    # Comment on this batch.
+```javascript
+{
+// 0 is bank-to-bank, 1 is bank-to-mobile
+"Type": 0 or 1,
 
-    "OrderLines": [
-        {"Payee": "Name Name",      # Not checked.
-        "PrimaryAccountNumber": "1116031422",   # phone # or account # of recipient
-        "Amount": 3000,             # in ksh
-        "BankCode": "30011",        # Identifies the bank. Required for bank-to-bank transfers. Omit for bank-to-mobile transfers.
-        "Reference": "Salary1",     # Internal reference for your own purposes.
-        }, ...]
-    }
+// ID of company, assigned by Chase Bank
+"CompanyId": '00000000-1111-2222-3333-444444444444',
 
+// Comment on this batch.
+"Remarks": "My Testing",
 
+// List of transactions to make:
+"OrderLines": [
+    
+    {
+    // Name of recipient. Not checked against government database.
+    "Payee": "Name Name",
+
+    // Phone # or account # of recipient - where the money is going
+    "PrimaryAccountNumber": "1116031422",
+
+    // Amount of money you are sending
+    "Amount": 3000,
+    
+    // Recipient bank. Required for bank-to-bank. Omit for bank-to-mobile.
+    "BankCode": "30011",
+
+    // Internal reference for your own purposes.
+    "Reference": "Salary1",
+    }, 
+
+    // ...Additional Orders as necessary...
+
+    ]
+}
+```
